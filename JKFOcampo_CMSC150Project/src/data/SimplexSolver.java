@@ -19,9 +19,9 @@ public class SimplexSolver {
 		
 		while(true) {
 			int colIndex = -1; // hold the column index, if still -1 after checking the bottom row, the problem has reached its optimal solution
-			double minVal = 0; // hold the minimum value (largest magnitude) at the bottom row, to be used in getting the Pivot column and element 
+			double minVal = 1e-9; // hold the minimum value (largest magnitude) at the bottom row, to be used in getting the Pivot column and element 
 			
-			for(int i = 0; i < ncol; i++) {
+			for(int i = 0; i < ncol-1; i++) {
 				if(tableau[nrow-1][i] < minVal) {
 					minVal = tableau[nrow-1][i];
 					colIndex = i;
@@ -38,7 +38,7 @@ public class SimplexSolver {
 			double minTR = Double.POSITIVE_INFINITY; // initial test ratio is an absurdly large number such as positive infinity to ensure it gets replaced
 			
 			for(int i = 0; i < nrow-1; i++) { // loop through the elements of the pivot column
-				if(tableau[i][colIndex] > 0) { // check if positive
+				if(tableau[i][colIndex] > 1e-9) { // check if positive
 					double tr = tableau[i][ncol-1]/tableau[i][colIndex]; //get the test ratio
 					if(tr < minTR) {
 						minTR = tr;
