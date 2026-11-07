@@ -19,6 +19,7 @@ public class SimplexResult {
  	public double Z; // to hold the minimized cost
  	public int iter = 0; //to hold the number of iterations
  	public boolean isInfeasible = false; //placeholder for feasibility
+ 	public double[] solution; // to hold the solution vector
  	
  	
 }
