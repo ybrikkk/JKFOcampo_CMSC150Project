@@ -1,6 +1,7 @@
 /* Simplex Solver class
  * 
  * This class is for solving the problem through Simplex method.
+ * This assumes that the initial tableau is already ready for solving and no need to transpose if it's a Minimization problem
  * 
  * */
 
@@ -74,10 +75,49 @@ public class SimplexSolver {
 		
 		result.finalTableau = tableau;
 		result.Z = tableau[nrow-1][ncol-1];
+		//after the loop/reached the optimal solution, insert the tableau as the final tableau in the result object
+		//get Z by getting the last element
 		
-		//continuation later, i want to sleep
-		//remember to make copyMatrix method, a helper method for copying the tableau haha
-		// loop + system.copy lng ata un idle
+		if(!result.isInfeasible) { //if the problem is feasible
+			int varCols = ncol-2;
+			result.solution = new double[varCols];
+		 //get the number of variable columns by removing the solution and Z columns
+		//then instantiate the solution vector/array with the size of the variable columns
+		
+			if(isMax) { //if the problem is a Maximization type
+				for(int i = 0; i < varCols; i++) {
+					int zeroCount = 0;
+					int oneCount = 0;
+					int oneRowIndex = -1;
+					for(int j = 0; j < nrow; j++) {
+						if(Math.abs(tableau[j][i] - 1) <  1e-9) {
+							oneCount++;
+							oneRowIndex = j;
+						}else if(Math.abs(tableau[j][i]) < 1e-9) { //1e-9 is used to catch values that are not exactly zero but can be considered as zero
+							zeroCount++;
+						}
+					}// check each element in the column if there are ones or zeroes
+					
+					if(oneCount == 1 && zeroCount == nrow-1) { //check if there is only one 1 in the column and the rest are zeroes
+						result.solution[i] = tableau[oneRowIndex][ncol-1];
+					}else {
+						result.solution[i] = 0; // if the conditions above are not fulfilled, then the value of that variable is zero
+					}
+				}
+			} else { //else if the problem is Minimization
+				for(int i = 0; i < varCols; i++) {
+					result.solution[i] = tableau[nrow-1][i];
+				}
+			}
+		}
 		return result;
+	}
+	
+	public static double[][] copyMatrix(double[][] tableau){
+		double[][] copy = new double[tableau.length][tableau[0].length];
+		for(int i = 0; i < tableau.length; i++) {
+			System.arraycopy(tableau[i], 0, copy[i], 0, tableau[i].length);
+		}
+		return copy;
 	}
 }
