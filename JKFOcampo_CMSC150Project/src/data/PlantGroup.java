@@ -20,11 +20,11 @@ public class PlantGroup {
 		this.avail = avail;
 		this.cost = new double[heat.length];
 		for(int i = 0; i < heat.length; i++) {
-			this.cost[i] = baseCost*heat[i]; //used for computing the cost based on heat and time block
+			this.cost[i] = Math.round(baseCost*heat[i]); //used for computing the cost based on heat and time block
 		}
 	}
 	
 	public double capacityVal(int x) {
-		return cap*avail[x]; //method used for getting the capacity right hand side
+		return Math.round(cap*avail[x]); //method used for getting the capacity right hand side
 	}
 }
